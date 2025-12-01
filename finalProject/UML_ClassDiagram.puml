@@ -1,0 +1,167 @@
+@startuml FinalProject_ClassDiagram
+
+' Main Application Classes
+class Main {
+  + {static} main(String[] args): void
+}
+
+class Canvas {
+  - serialVersionUID: long
+  - frame: JFrame
+  - gameLoopTimer: Timer
+  - gameObjectList: List<GameObject>
+  - highlighted: int
+  + Canvas()
+  + start(): void
+  + addGameObject(GameObject): void
+  + paintComponent(Graphics): void
+  + actionPerformed(ActionEvent): void
+  + keyTyped(KeyEvent): void
+  + keyPressed(KeyEvent): void
+  + keyReleased(KeyEvent): void
+}
+
+abstract class GameObject {
+  - x: int
+  - y: int
+  - velocity: int
+  - direction: int
+  - originalDirection: int
+  - originalVelocity: int
+  - isUnderUserControl: boolean
+  # imageList: List<Icon>
+  # currentImage: int
+  # allowedDirections: Set<Integer>
+  + GameObject(int x, int y)
+  + draw(Component, Graphics): void
+  + getX(): int
+  + setX(int): void
+  + getY(): int
+  + setY(int): void
+  + getVelocity(): int
+  + setVelocity(int): void
+  + getDirection(): int
+  + setDirection(int): void
+  + getCurrentImage(): Icon
+  + addAllowedDirection(int): void
+  + isDirectionAllowed(int): boolean
+  + getAllowedDirections(): Set<Integer>
+  + saveAutonomousBehavior(): void
+  + enableUserControl(): void
+  + restoreAutonomousBehavior(): void
+  + isUnderUserControl(): boolean
+  + {abstract} move(Canvas): void
+  + {abstract} setImage(): void
+}
+
+class Type_A_GameObject {
+  + Type_A_GameObject(int x, int y)
+  - createPlaceholderIcon(): Icon
+  + move(Canvas): void
+  + setImage(): void
+}
+
+class Type_B_GameObject {
+  + Type_B_GameObject(int x, int y)
+  - createPlaceholderIcon(): Icon
+  + move(Canvas): void
+  + setImage(): void
+}
+
+class Type_C_GameObject {
+  + Type_C_GameObject(int x, int y)
+  - createPlaceholderIcon(): Icon
+  + move(Canvas): void
+  + setImage(): void
+}
+
+class Type_D_GameObject {
+  + Type_D_GameObject(int x, int y)
+  - createPlaceholderIcon(): Icon
+  + move(Canvas): void
+  + setImage(): void
+  + keyTyped(KeyEvent): void
+  + keyPressed(KeyEvent): void
+  + keyReleased(KeyEvent): void
+}
+
+class Direction {
+  + {static} NONE: int
+  + {static} UP: int
+  + {static} LEFT: int
+  + {static} DOWN: int
+  + {static} RIGHT: int
+}
+
+' Interfaces
+interface ActionListener {
+  + actionPerformed(ActionEvent): void
+}
+
+interface KeyListener {
+  + keyTyped(KeyEvent): void
+  + keyPressed(KeyEvent): void
+  + keyReleased(KeyEvent): void
+}
+
+' Relationships
+Main ..> Canvas : creates
+Main ..> Type_A_GameObject : creates
+Main ..> Type_B_GameObject : creates
+Main ..> Type_C_GameObject : creates
+Main ..> Type_D_GameObject : creates
+
+Canvas "1" o-- "*" GameObject : contains
+Canvas ..|> ActionListener : implements
+Canvas ..|> KeyListener : implements
+Canvas ..> Direction : uses
+
+GameObject <|-- Type_A_GameObject : extends
+GameObject <|-- Type_B_GameObject : extends
+GameObject <|-- Type_C_GameObject : extends
+GameObject <|-- Type_D_GameObject : extends
+GameObject ..> Direction : uses
+
+Type_D_GameObject ..|> KeyListener : implements
+
+' Design Patterns Notes
+note right of GameObject
+  <b>Template Method Pattern</b>
+  Defines abstract methods move()
+  and setImage() that subclasses
+  must implement.
+
+  <b>Strategy Pattern</b>
+  Different movement strategies
+  for autonomous vs user-controlled
+  behavior.
+end note
+
+note right of Type_A_GameObject
+  Restricted to vertical
+  movement only (UP, DOWN)
+end note
+
+note right of Type_B_GameObject
+  Can move in all 4 directions
+  Circular pattern: UP→RIGHT→DOWN→LEFT
+end note
+
+note right of Type_C_GameObject
+  Restricted to horizontal
+  movement only (LEFT, RIGHT)
+end note
+
+note right of Type_D_GameObject
+  Can move in all 4 directions
+  Opposite pattern: DOWN→LEFT→UP→RIGHT
+end note
+
+note bottom of Canvas
+  <b>Observer Pattern</b>
+  Canvas observes keyboard events
+  and timer events to update
+  GameObjects accordingly.
+end note
+
+@enduml

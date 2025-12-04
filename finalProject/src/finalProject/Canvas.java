@@ -149,10 +149,12 @@ public class Canvas extends JComponent implements ActionListener, KeyListener {
 
 	  public void keyReleased(KeyEvent e) {
 	    if (e.getKeyCode() == KeyEvent.VK_TAB) {
-	      // Restore autonomous behavior for the currently highlighted object
+	      // Keep the current direction/velocity for the currently highlighted object
+	      // instead of restoring its original autonomous behavior so it continues
+	      // moving in the direction the user left it in.
 	      if (!gameObjectList.isEmpty()) {
 	        GameObject currentObject = gameObjectList.get(highlighted);
-	        currentObject.restoreAutonomousBehavior();
+	        currentObject.disableUserControlKeepCurrent();
 	      }
 
 	      // Move to next object

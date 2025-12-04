@@ -123,6 +123,17 @@ public abstract class GameObject {
 		return isUnderUserControl;
 	}
 
+	// New: disable user control but keep the current direction/velocity so the
+	// object continues moving in the direction the user left it in when they
+	// tab away.
+	public void disableUserControlKeepCurrent() {
+		if (isUnderUserControl) {
+			// Do not restore original autonomous direction/velocity; just exit
+			// user-control mode so the object keeps its current direction/velocity.
+			isUnderUserControl = false;
+		}
+	}
+
 	//ABSTRACT METHODS
 	public abstract void move(Canvas c);
 	public abstract void setImage();
